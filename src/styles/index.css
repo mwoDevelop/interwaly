@@ -2,12 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply min-h-screen;
+    background-color: #020617;
+    color: #e2e8f0;
+  }
+
+  body[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
+  body[data-theme='light'] {
+    color-scheme: light;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
 }
 
-body {
-  @apply bg-slate-950 text-slate-100 min-h-screen;
+body[data-theme='light'] .bg-slate-950,
+body[data-theme='light'] .bg-slate-900 {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+body[data-theme='light'] .bg-slate-900\/70 {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #0f172a;
+}
+
+body[data-theme='light'] .bg-slate-900\/60 {
+  background-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+body[data-theme='light'] .bg-slate-900\/80 {
+  background-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+body[data-theme='light'] .bg-slate-800 {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+body[data-theme='light'] .border-slate-800,
+body[data-theme='light'] .border-slate-700 {
+  border-color: #cbd5f5;
+}
+
+body[data-theme='light'] .text-slate-100 {
+  color: #0f172a;
+}
+
+body[data-theme='light'] .text-slate-200 {
+  color: #1e293b;
+}
+
+body[data-theme='light'] .text-slate-300 {
+  color: #334155;
+}
+
+body[data-theme='light'] .text-slate-400 {
+  color: #475569;
+}
+
+body[data-theme='light'] .text-slate-500 {
+  color: #64748b;
+}
+
+body[data-theme='light'] .hover\:bg-slate-800:hover {
+  background-color: #e2e8f0;
 }
 
 button:focus-visible,

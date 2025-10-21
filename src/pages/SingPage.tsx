@@ -8,8 +8,9 @@ import { useProgressStore } from '../state/progressStore';
 
 export const SingPage = () => {
   const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
-  const { tuning } = useSettingsStore();
+  const { tuning, theme } = useSettingsStore();
   const addResult = useProgressStore((state) => state.addResult);
+  const headingColor = theme === 'light' ? 'text-slate-900' : 'text-white';
 
   useEffect(() => {
     if (!question) {
@@ -49,7 +50,7 @@ export const SingPage = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold text-white">Śpiewaj interwał</h2>
+        <h2 className={`text-2xl font-semibold ${headingColor}`}>Śpiewaj interwał</h2>
         <p className="text-sm text-slate-300">Nagraj swój głos, aby sprawdzić dokładność ±30 centów.</p>
       </header>
       <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
@@ -82,12 +83,12 @@ export const SingPage = () => {
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-sm text-slate-200">
             <p className="text-xs uppercase tracking-wide text-slate-400">Cel</p>
-            <p className="mt-2 text-xl font-semibold text-white">{question?.intervalId ?? '—'}</p>
+            <p className={`mt-2 text-xl font-semibold ${headingColor}`}>{question?.intervalId ?? '—'}</p>
             <p className="text-slate-400">Częstotliwość docelowa: {targetFrequency?.toFixed(2) ?? '—'} Hz</p>
           </div>
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-sm text-slate-200">
             <p className="text-xs uppercase tracking-wide text-slate-400">Wynik</p>
-            <p className="mt-2 text-xl font-semibold text-white">{result.frequency?.toFixed(2) ?? '—'} Hz</p>
+            <p className={`mt-2 text-xl font-semibold ${headingColor}`}>{result.frequency?.toFixed(2) ?? '—'} Hz</p>
             <p className={
               result.centsDiff !== null && Math.abs(result.centsDiff) <= 30
                 ? 'text-emerald-400'

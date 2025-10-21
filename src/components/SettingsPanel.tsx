@@ -1,13 +1,38 @@
 import { useSettingsStore } from '../state/settingsStore';
 
 export const SettingsPanel = () => {
-  const { instrument, setInstrument, tempo, setTempo, volume, setVolume, tuning, setTuning, difficulty, setDifficulty } =
-    useSettingsStore();
+  const {
+    instrument,
+    setInstrument,
+    tempo,
+    setTempo,
+    volume,
+    setVolume,
+    tuning,
+    setTuning,
+    difficulty,
+    setDifficulty,
+    theme,
+    setTheme
+  } = useSettingsStore();
 
   return (
     <section className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
-      <h2 className="text-lg font-semibold text-white">Konfiguracja</h2>
+      <h2 className={`text-lg font-semibold ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>
+        Konfiguracja
+      </h2>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <label className="flex flex-col gap-1 text-xs uppercase tracking-wide text-slate-400">
+          Motyw
+          <select
+            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200"
+            value={theme}
+            onChange={(event) => setTheme(event.target.value as typeof theme)}
+          >
+            <option value="dark">Ciemny</option>
+            <option value="light">Jasny</option>
+          </select>
+        </label>
         <label className="flex flex-col gap-1 text-xs uppercase tracking-wide text-slate-400">
           Instrument
           <select
@@ -15,9 +40,9 @@ export const SettingsPanel = () => {
             value={instrument}
             onChange={(event) => setInstrument(event.target.value as typeof instrument)}
           >
-            <option value="sine">Sinus</option>
-            <option value="square">Kwadrat</option>
-            <option value="sawtooth">Piła</option>
+            <option value="piano">Pianino</option>
+            <option value="guitar">Gitara</option>
+            <option value="cymbals">Cymbałki</option>
           </select>
         </label>
         <label className="flex flex-col gap-1 text-xs uppercase tracking-wide text-slate-400">

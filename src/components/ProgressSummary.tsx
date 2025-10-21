@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useProgressStore } from '../state/progressStore';
 import { intervalList } from '../utils/intervals';
+import { useSettingsStore } from '../state/settingsStore';
 
 export const ProgressSummary = () => {
   const { stats, history, dailyGoal, streak } = useProgressStore();
+  const theme = useSettingsStore((state) => state.theme);
 
   const weakSpots = useMemo(() => {
     return Object.values(stats)
@@ -30,7 +32,9 @@ export const ProgressSummary = () => {
     <section className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">Postępy</h2>
+          <h2 className={`text-lg font-semibold ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>
+            Postępy
+          </h2>
           <p className="text-sm text-slate-400">Łączna dokładność {accuracy}%</p>
         </div>
         <div className="text-right text-sm text-slate-300">

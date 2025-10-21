@@ -6,9 +6,10 @@ import { useSettingsStore } from '../state/settingsStore';
 
 export const ComparePage = () => {
   const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
-  const { tuning } = useSettingsStore();
+  const { tuning, theme } = useSettingsStore();
   const [comparison, setComparison] = useState<'higher' | 'lower' | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const headingColor = theme === 'light' ? 'text-slate-900' : 'text-white';
 
   useEffect(() => {
     if (!question) {
@@ -36,7 +37,7 @@ export const ComparePage = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold text-white">Porównaj interwały</h2>
+        <h2 className={`text-2xl font-semibold ${headingColor}`}>Porównaj interwały</h2>
         <p className="text-sm text-slate-300">Porównaj interwał referencyjny z wariantem i naucz się subtelnych różnic.</p>
       </header>
       <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
@@ -68,12 +69,12 @@ export const ComparePage = () => {
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-sm text-slate-200">
             <p className="text-xs uppercase tracking-wide text-slate-400">Referencja</p>
-            <p className="mt-2 text-xl font-semibold text-white">{baseInterval?.shortName ?? '—'}</p>
+            <p className={`mt-2 text-xl font-semibold ${headingColor}`}>{baseInterval?.shortName ?? '—'}</p>
             <p className="text-slate-400">{baseInterval?.name}</p>
           </div>
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-sm text-slate-200">
             <p className="text-xs uppercase tracking-wide text-slate-400">Wariant</p>
-            <p className="mt-2 text-xl font-semibold text-white">{comparison ?? '—'}</p>
+            <p className={`mt-2 text-xl font-semibold ${headingColor}`}>{comparison ?? '—'}</p>
             <p className="text-slate-400">{feedback ?? 'Wybierz wariant, aby porównać.'}</p>
           </div>
         </div>
