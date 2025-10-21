@@ -1,4 +1,4 @@
-import { Menu, Piano, TrendingUp } from 'lucide-react';
+// Ikony zastępcze (emoji zamiast ikon z lucide-react)
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -6,12 +6,12 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { ShortcutHints } from './ShortcutHints';
 
 const navItems = [
-  { to: '/', labelKey: 'nav.dashboard', icon: TrendingUp },
-  { to: '/recognize', labelKey: 'nav.recognize', icon: Piano },
-  { to: '/flashcards', labelKey: 'nav.flashcards', icon: Menu },
-  { to: '/sing', labelKey: 'nav.sing', icon: Menu },
-  { to: '/compare', labelKey: 'nav.compare', icon: Menu },
-  { to: '/assoc', labelKey: 'nav.assoc', icon: Menu }
+  { to: '/', labelKey: 'nav.dashboard', icon: () => <span>📈</span> },
+  { to: '/recognize', labelKey: 'nav.recognize', icon: () => <span>🎹</span> },
+  { to: '/flashcards', labelKey: 'nav.flashcards', icon: () => <span>🃏</span> },
+  { to: '/sing', labelKey: 'nav.sing', icon: () => <span>🎤</span> },
+  { to: '/compare', labelKey: 'nav.compare', icon: () => <span>⚖️</span> },
+  { to: '/assoc', labelKey: 'nav.assoc', icon: () => <span>🎵</span> }
 ];
 
 export const AppLayout = () => {
@@ -46,7 +46,7 @@ export const AppLayout = () => {
                   }
                   onClick={() => setIsOpen(false)}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon />
                   {t(item.labelKey)}
                 </NavLink>
               );
@@ -60,7 +60,7 @@ export const AppLayout = () => {
           onClick={() => setIsOpen(true)}
           className="mb-4 flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow md:hidden"
         >
-          <Menu className="h-4 w-4" /> {t('aria.openMenu')}
+          <span>☰</span> {t('aria.openMenu')}
         </button>
         <main className="flex-1 md:pl-10">
           <Outlet />

@@ -38,17 +38,16 @@ const yin = (buffer: Float32Array, sampleRate: number) => {
   return sampleRate / tau;
 };
 
-type Message = { type: 'analyze'; payload: { buffer: Float32Array; sampleRate: number } };
 
-type Response = { type: 'result'; frequency: number | null };
+type WorkerMessage = { type: 'analyze'; payload: { buffer: Float32Array; sampleRate: number } };
+type WorkerResponse = { type: 'result'; frequency: number | null };
 
-declare const self: DedicatedWorkerGlobalScope;
-
-self.onmessage = (event: MessageEvent<Message>) => {
-  if (event.data.type === 'analyze') {
-    const { buffer, sampleRate } = event.data.payload;
+self.onmessage = (event: MessageEvent) => {
+  const data = event.data as WorkerMessage;
+  if (data.type === 'analyze') {
+    const { buffer, sampleRate } = data.payload;
     const frequency = yin(buffer, sampleRate);
-    const response: Response = { type: 'result', frequency };
-    self.postMessage(response, [buffer.buffer]);
+    const response: WorkerResponse = { type: 'result', frequency };
+  self.postMessage(response);
   }
 };
