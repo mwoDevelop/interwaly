@@ -4,6 +4,7 @@ import { midiToFrequency, randomMidiInRange } from '../utils/note';
 import { useSettingsStore } from '../state/settingsStore';
 import { playInterval } from '../lib/audio/player';
 import { useProgressStore } from '../state/progressStore';
+import { useAudioUnlock } from './useAudioUnlock';
 
 export interface IntervalQuestion {
   intervalId: string;
@@ -15,6 +16,7 @@ export const useIntervalGenerator = () => {
   const { instrument, volume, tuning, difficulty } = useSettingsStore();
   const stats = useProgressStore((state) => state.stats);
   const [question, setQuestion] = useState<IntervalQuestion | null>(null);
+  const audioReady = useAudioUnlock();
 
   const weights = useMemo(() => {
     const weak = Object.values(stats).map((s) => {
@@ -43,15 +45,19 @@ export const useIntervalGenerator = () => {
       if (!q) return;
       const interval = intervalList.find((i) => i.id === q.intervalId);
       if (!interval) return;
-      await playInterval(midiToFrequency(q.tonicMidi, tuning), interval.semitones, {
-        duration: 1.2,
-        direction: q.direction,
-        instrument,
-        volume
-      });
+      try {
+        await playInterval(midiToFrequency(q.tonicMidi, tuning), interval.semitones, {
+          duration: 1.2,
+          direction: q.direction,
+          instrument,
+          volume
+        });
+      } catch (error) {
+        console.warn('Nie udało się odtworzyć interwału', error);
+      }
     },
     [instrument, volume, tuning, question]
   );
 
-  return { question, generateQuestion, play };
+  return { question, generateQuestion, play, audioReady };
 };

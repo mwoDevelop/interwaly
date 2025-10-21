@@ -5,15 +5,21 @@ import { midiToFrequency } from '../utils/note';
 import { useSettingsStore } from '../state/settingsStore';
 
 export const ComparePage = () => {
-  const { question, generateQuestion, play } = useIntervalGenerator();
+  const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
   const { tuning } = useSettingsStore();
   const [comparison, setComparison] = useState<'higher' | 'lower' | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    const q = generateQuestion();
-    void play(q);
-  }, [generateQuestion, play]);
+    if (!question) {
+      generateQuestion();
+    }
+  }, [generateQuestion, question]);
+
+  useEffect(() => {
+    if (!question || !audioReady) return;
+    void play(question);
+  }, [question, audioReady, play]);
 
   const baseInterval = useMemo(() => intervalList.find((i) => i.id === question?.intervalId), [question]);
 

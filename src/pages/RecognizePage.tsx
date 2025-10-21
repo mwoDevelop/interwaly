@@ -6,16 +6,22 @@ import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { StaffPreview } from '../components/StaffPreview';
 
 export const RecognizePage = () => {
-  const { question, generateQuestion, play } = useIntervalGenerator();
+  const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
   const [revealed, setRevealed] = useState(false);
   const addResult = useProgressStore((state) => state.addResult);
   const [answer, setAnswer] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    const first = generateQuestion();
-    void play(first);
-  }, [generateQuestion, play]);
+    if (!question) {
+      generateQuestion();
+    }
+  }, [generateQuestion, question]);
+
+  useEffect(() => {
+    if (!question || !audioReady) return;
+    void play(question);
+  }, [question, audioReady, play]);
 
   const interval = useMemo(() => intervalList.find((i) => i.id === question?.intervalId), [question]);
 

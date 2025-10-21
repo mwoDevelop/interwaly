@@ -5,12 +5,18 @@ import { VirtualKeyboard } from '../components/VirtualKeyboard';
 
 export const FlashcardsPage = () => {
   const [flipped, setFlipped] = useState(false);
-  const { question, generateQuestion, play } = useIntervalGenerator();
+  const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
 
   useEffect(() => {
-    const q = generateQuestion();
-    void play(q);
-  }, [generateQuestion, play]);
+    if (!question) {
+      generateQuestion();
+    }
+  }, [generateQuestion, question]);
+
+  useEffect(() => {
+    if (!question || !audioReady) return;
+    void play(question);
+  }, [question, audioReady, play]);
 
   const card = useMemo(() => {
     if (!question) return intervalList[0];
