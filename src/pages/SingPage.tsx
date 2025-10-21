@@ -7,14 +7,20 @@ import { useSettingsStore } from '../state/settingsStore';
 import { useProgressStore } from '../state/progressStore';
 
 export const SingPage = () => {
-  const { question, generateQuestion, play } = useIntervalGenerator();
+  const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
   const { tuning } = useSettingsStore();
   const addResult = useProgressStore((state) => state.addResult);
 
   useEffect(() => {
-    const q = generateQuestion();
-    void play(q);
-  }, [generateQuestion, play]);
+    if (!question) {
+      generateQuestion();
+    }
+  }, [generateQuestion, question]);
+
+  useEffect(() => {
+    if (!question || !audioReady) return;
+    void play(question);
+  }, [question, audioReady, play]);
 
   const targetFrequency = useMemo(() => {
     const interval = intervalList.find((i) => i.id === question?.intervalId);
