@@ -2,10 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { intervalList } from '../utils/intervals';
 import { useIntervalGenerator } from '../hooks/useIntervalGenerator';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
+import { useSettingsStore } from '../state/settingsStore';
 
 export const FlashcardsPage = () => {
   const [flipped, setFlipped] = useState(false);
   const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
+  const theme = useSettingsStore((state) => state.theme);
+  const headingColor = theme === 'light' ? 'text-slate-900' : 'text-white';
 
   useEffect(() => {
     if (!question) {
@@ -32,7 +35,7 @@ export const FlashcardsPage = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold text-white">Fiszki interwałowe</h2>
+        <h2 className={`text-2xl font-semibold ${headingColor}`}>Fiszki interwałowe</h2>
         <p className="text-sm text-slate-300">Utrwalaj teorię poprzez szybkie fiszki dźwiękowe i opisowe.</p>
       </header>
       <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
@@ -56,7 +59,7 @@ export const FlashcardsPage = () => {
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-center">
             <p className="text-sm uppercase text-slate-400">Interwał</p>
-            <p className="mt-2 text-4xl font-bold text-white">{card.shortName}</p>
+            <p className={`mt-2 text-4xl font-bold ${headingColor}`}>{card.shortName}</p>
             <p className="text-sm text-slate-300">{card.name}</p>
           </div>
           <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 text-sm text-slate-200">

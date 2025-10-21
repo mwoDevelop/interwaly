@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 
-export type InstrumentType = 'sine' | 'square' | 'sawtooth';
+export type InstrumentType = 'piano' | 'guitar' | 'cymbals';
 export type Difficulty = 'basic' | 'intermediate' | 'advanced';
+
+export type Theme = 'dark' | 'light';
 
 export interface SettingsState {
   instrument: InstrumentType;
@@ -9,11 +11,13 @@ export interface SettingsState {
   volume: number;
   tuning: number;
   difficulty: Difficulty;
+  theme: Theme;
   setInstrument: (instrument: InstrumentType) => void;
   setTempo: (tempo: number) => void;
   setVolume: (volume: number) => void;
   setTuning: (tuning: number) => void;
   setDifficulty: (difficulty: Difficulty) => void;
+  setTheme: (theme: Theme) => void;
 }
 
 const STORAGE_KEY = 'interwaly.settings';
@@ -38,7 +42,8 @@ const writeSettings = (state: SettingsState) => {
         tempo: state.tempo,
         volume: state.volume,
         tuning: state.tuning,
-        difficulty: state.difficulty
+        difficulty: state.difficulty,
+        theme: state.theme
       })
     );
   } catch (error) {
@@ -47,15 +52,30 @@ const writeSettings = (state: SettingsState) => {
 };
 
 const stored = getStoredSettings();
-const defaultState: Pick<SettingsState, 'instrument' | 'tempo' | 'volume' | 'tuning' | 'difficulty'> = stored
-  ? JSON.parse(stored)
-  : {
-      instrument: 'sine',
-      tempo: 80,
-      volume: 0.7,
-      tuning: 440,
-      difficulty: 'basic'
-    };
+type StoredSettings = Partial<Pick<SettingsState, 'instrument' | 'tempo' | 'volume' | 'tuning' | 'difficulty' | 'theme'>>;
+const parsedSettings: StoredSettings & { instrument?: string } = stored ? JSON.parse(stored) : {};
+
+const normalizeInstrument = (value: string | undefined): InstrumentType => {
+  if (value === 'piano' || value === 'guitar' || value === 'cymbals') {
+    return value;
+  }
+  if (value === 'square') return 'guitar';
+  if (value === 'sawtooth') return 'cymbals';
+  return 'piano';
+};
+
+const defaultState: Pick<SettingsState, 'instrument' | 'tempo' | 'volume' | 'tuning' | 'difficulty' | 'theme'> = {
+  instrument: normalizeInstrument(parsedSettings.instrument),
+  tempo: parsedSettings.tempo ?? 80,
+  volume: parsedSettings.volume ?? 0.7,
+  tuning: parsedSettings.tuning ?? 440,
+  difficulty: parsedSettings.difficulty ?? 'basic',
+  theme: parsedSettings.theme === 'light' ? 'light' : 'dark'
+};
+
+if (typeof document !== 'undefined') {
+  document.body.dataset.theme = defaultState.theme;
+}
 
 export const useSettingsStore = create<SettingsState>((set) => ({
   ...defaultState,
@@ -86,6 +106,12 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   setDifficulty: (difficulty) =>
     set((state) => {
       const next = { ...state, difficulty };
+      writeSettings(next);
+      return next;
+    }),
+  setTheme: (theme) =>
+    set((state) => {
+      const next = { ...state, theme };
       writeSettings(next);
       return next;
     })

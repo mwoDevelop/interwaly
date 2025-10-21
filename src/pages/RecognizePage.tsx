@@ -4,6 +4,7 @@ import { useIntervalGenerator } from '../hooks/useIntervalGenerator';
 import { useProgressStore } from '../state/progressStore';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { StaffPreview } from '../components/StaffPreview';
+import { useSettingsStore } from '../state/settingsStore';
 
 export const RecognizePage = () => {
   const { question, generateQuestion, play, audioReady } = useIntervalGenerator();
@@ -11,6 +12,8 @@ export const RecognizePage = () => {
   const addResult = useProgressStore((state) => state.addResult);
   const [answer, setAnswer] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const theme = useSettingsStore((state) => state.theme);
+  const headingColor = theme === 'light' ? 'text-slate-900' : 'text-white';
 
   useEffect(() => {
     if (!question) {
@@ -58,7 +61,7 @@ export const RecognizePage = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold text-white">Rozpoznawanie interwałów</h2>
+        <h2 className={`text-2xl font-semibold ${headingColor}`}>Rozpoznawanie interwałów</h2>
         <p className="text-sm text-slate-300">Wybierz poprawny interwał po odsłuchu toniki i drugiego dźwięku.</p>
       </header>
       <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-6">
